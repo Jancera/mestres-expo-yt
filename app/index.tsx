@@ -16,7 +16,7 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Text>Rotas dinâmicas</Text>
+      <Text style={styles.title}>Layouts</Text>
       <Button title="Navegar" onPress={handlePress} />
     </View>
   );
@@ -25,7 +25,14 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     height: "100%",
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "yellow",
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
   },
 });

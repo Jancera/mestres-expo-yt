@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 
 export default function OrderId() {
   const params = useLocalSearchParams();
@@ -8,9 +8,17 @@ export default function OrderId() {
 
   return (
     <View
-      style={{ height: "100%", justifyContent: "center", alignItems: "center" }}
+      style={{
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "red",
+      }}
     >
       <Text>Informações de uma compra</Text>
+      <Link href="/orders/cart">
+        <Text>Navegar</Text>
+      </Link>
     </View>
   );
 }
