@@ -1,5 +1,5 @@
 import { View, Text, Button, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 
 export default function Home() {
   const router = useRouter();
@@ -16,6 +16,11 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: "Home screen",
+        }}
+      />
       <Text style={styles.title}>Layouts</Text>
       <Button title="Navegar" onPress={handlePress} />
     </View>
