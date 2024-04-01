@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import { View, Text, StyleSheet, TextInput } from "react-native";
 
 export default function HomeTab() {
   return (
     <View style={styles.container}>
       <Text>Hello from Home</Text>
+      <TextInput placeholder="Input" style={styles.input} />
     </View>
   );
 }
@@ -13,5 +14,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#999999",
+    width: 300,
+    padding: 5,
+    borderRadius: 10,
+    marginTop: 20,
   },
 });
