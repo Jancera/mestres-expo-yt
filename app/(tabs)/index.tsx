@@ -5,8 +5,8 @@ export default function HomeTab() {
   return (
     <View style={styles.container}>
       <Text>Hello from Home</Text>
-      <TextInput placeholder="Input" style={styles.input} />
       <Link href={"profile"}>Perfil</Link>
+      <Link href={"edit"}>Edit</Link>
     </View>
   );
 }

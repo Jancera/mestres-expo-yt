@@ -13,7 +13,6 @@ export default function TabsLayout() {
           ),
         }}
       />
-
       <Tabs.Screen
         name="profile"
         options={{
@@ -30,7 +29,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="cog" color={color} />
           ),
-          href: null,
+          // href: null,
         }}
       />
     </Tabs>
