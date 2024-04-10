@@ -1,10 +1,13 @@
 import { Link } from "expo-router";
 import { View, Text, StyleSheet, TextInput } from "react-native";
+import { EInterFonts } from "../../src/shared/inter-fonts.enum";
 
 export default function HomeTab() {
   return (
     <View style={styles.container}>
-      <Text>Hello from Home</Text>
+      <Text style={{ fontFamily: EInterFonts.THIN, fontSize: 40 }}>
+        Hello from Home
+      </Text>
       <Link href={"profile"}>Perfil</Link>
       <Link href={"edit"}>Edit</Link>
     </View>
