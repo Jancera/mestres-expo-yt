@@ -1,61 +1,68 @@
-import { Button, StyleSheet, TextInput, View } from "react-native";
-import { setItemAsync, getItemAsync, deleteItemAsync } from "expo-secure-store";
+import { Button, Image, StyleSheet, Text, View } from "react-native";
+import * as FileSytem from "expo-file-system";
+import { useState } from "react";
 
 export default function HomeTab() {
-  const KEY = "key";
+  const [progress, setProgress] = useState(0);
+  const [localUri, setLocalUri] = useState<string | undefined>();
 
-  const save = async (key: string, value: string) => {
-    await setItemAsync(key, value);
+  const serverImageUrl =
+    "https://images.unsplash.com/photo-1537498425277-c283d32ef9db?q=80&w=2078";
+  const localImageUri = FileSytem.documentDirectory + "image.jpeg";
 
-    alert("Item salvo com sucesso");
-  };
+  const downloadResumable = FileSytem.createDownloadResumable(
+    serverImageUrl,
+    localImageUri,
+    {},
+    (downloadProgress) => {
+      const currentProgress =
+        downloadProgress.totalBytesWritten /
+        downloadProgress.totalBytesExpectedToWrite;
 
-  const readValue = async (key: string) => {
-    const result = await getItemAsync(key);
+      console.log(currentProgress);
 
-    if (result) {
-      alert(`Item referente a ${key} é ${result}`);
-    } else {
-      alert("Item não encontrado");
+      setProgress(currentProgress * 100);
+    },
+  );
+
+  const handleStartDownload = async () => {
+    try {
+      await downloadResumable.downloadAsync();
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  const deleteValue = async (key: string) => {
-    await deleteItemAsync(key);
+  const handleVerify = async () => {
+    try {
+      const info = await FileSytem.getInfoAsync(localImageUri);
 
-    alert("Item removido com sucesso");
+      if (info.exists) {
+        setLocalUri(info.uri);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <View style={styles.container}>
-      {/* <Text style={{ fontSize: 40, fontFamily: EPoppinsFonts.BOLD }}>
-        Hello from Home
-      </Text>
-      <Link href={"profile"}>Perfil</Link>
-      <Link href={"edit"}>Edit</Link> */}
+      <Text style={styles.title}>Progresso: {progress}</Text>
 
-      <TextInput
-        style={styles.input}
-        onSubmitEditing={(event) => {
-          save(KEY, event.nativeEvent.text);
+      <Button
+        title="Iniciar download"
+        onPress={() => {
+          handleStartDownload();
         }}
-        placeholder="Digite um valor para salvar"
+      />
+      <Button
+        title="Verificar arquivo"
+        onPress={() => {
+          handleVerify();
+        }}
       />
 
-      <View style={styles.buttonsContainer}>
-        <Button
-          title="Ler valor"
-          onPress={() => {
-            readValue(KEY);
-          }}
-        />
-        <Button
-          title="Apagar valor"
-          onPress={() => {
-            deleteValue(KEY);
-          }}
-        />
-      </View>
+      <Image source={{ uri: localUri }} style={{ width: 200, height: 200 }} />
     </View>
   );
 }
@@ -74,9 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
   },
-  buttonsContainer: {
-    alignItems: "center",
-    justifyContent: "space-between",
-    height: "15%",
+  title: {
+    fontSize: 20,
   },
 });
