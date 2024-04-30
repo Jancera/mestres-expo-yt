@@ -1,68 +1,92 @@
-import { Button, Image, StyleSheet, Text, View } from "react-native";
-import * as FileSytem from "expo-file-system";
-import { useState } from "react";
+import { Button, StyleSheet, TextInput, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeTab() {
-  const [progress, setProgress] = useState(0);
-  const [localUri, setLocalUri] = useState<string | undefined>();
+  const key = "chave";
 
-  const serverImageUrl =
-    "https://images.unsplash.com/photo-1537498425277-c283d32ef9db?q=80&w=2078";
-  const localImageUri = FileSytem.documentDirectory + "image.jpeg";
-
-  const downloadResumable = FileSytem.createDownloadResumable(
-    serverImageUrl,
-    localImageUri,
-    {},
-    (downloadProgress) => {
-      const currentProgress =
-        downloadProgress.totalBytesWritten /
-        downloadProgress.totalBytesExpectedToWrite;
-
-      console.log(currentProgress);
-
-      setProgress(currentProgress * 100);
-    },
-  );
-
-  const handleStartDownload = async () => {
+  const saveItem = async (value: string) => {
     try {
-      await downloadResumable.downloadAsync();
+      await AsyncStorage.setItem(key, value);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleVerify = async () => {
+  const removeItem = async () => {
     try {
-      const info = await FileSytem.getInfoAsync(localImageUri);
+      await AsyncStorage.removeItem(key);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-      if (info.exists) {
-        setLocalUri(info.uri);
+  const getItem = async () => {
+    try {
+      const response = await AsyncStorage.getItem(key);
+
+      if (response !== null) {
+        alert(`O valor lido é ${response}`);
+      } else {
+        alert("Nenhum valor encontrado");
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const mergeItem = async () => {
+    const obj1 = {
+      key: "value",
+    };
+
+    const obj1String = JSON.stringify(obj1);
+
+    await AsyncStorage.setItem("obj1", obj1String);
+
+    const obj2 = {
+      name: "Jancer",
+    };
+
+    const obj2String = JSON.stringify(obj2);
+
+    await AsyncStorage.mergeItem("obj1", obj2String);
+
+    const item = await AsyncStorage.getItem("obj1");
+
+    if (item !== null) {
+      alert(`O valor lido após o merge é ${item}`);
+      console.log(JSON.parse(item).name);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Progresso: {progress}</Text>
+      <TextInput
+        style={styles.textInput}
+        onSubmitEditing={(event) => {
+          saveItem(event.nativeEvent.text);
+        }}
+        placeholder="Digite um valor para salvar"
+      />
 
       <Button
-        title="Iniciar download"
+        title="Ler valor"
         onPress={() => {
-          handleStartDownload();
+          getItem();
         }}
       />
       <Button
-        title="Verificar arquivo"
+        title="Apagar valor"
         onPress={() => {
-          handleVerify();
+          removeItem();
         }}
       />
-
-      <Image source={{ uri: localUri }} style={{ width: 200, height: 200 }} />
+      <Button
+        title="Merge"
+        onPress={() => {
+          mergeItem();
+        }}
+      />
     </View>
   );
 }
@@ -73,15 +97,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  input: {
-    borderWidth: 1,
-    borderColor: "#999999",
-    width: 300,
-    padding: 5,
-    borderRadius: 10,
+  textInput: {
+    height: 35,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    padding: 4,
+    width: "80%",
+    borderRadius: 5,
     marginBottom: 20,
-  },
-  title: {
-    fontSize: 20,
   },
 });
