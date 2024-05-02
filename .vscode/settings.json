@@ -1,4 +1,5 @@
 {
   "prettier.printWidth": 80,
-  "terminal.integrated.fontSize": 12
+  "terminal.integrated.fontSize": 12,
+  "workbench.editor.showTabs": "multiple"
 }
